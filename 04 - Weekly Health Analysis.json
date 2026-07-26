@@ -1,0 +1,292 @@
+{
+  "name": "04 - Weekly Health Analysis",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtHour": 20
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b822eeb6-0600-4851-8f78-caa9d2442f30",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1vqkqN2RJtX3ZghGZryPKWQshf8XjuGpJVQ2dCTwch7E",
+          "mode": "list",
+          "cachedResultName": "Daily Habit Tacker Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1vqkqN2RJtX3ZghGZryPKWQshf8XjuGpJVQ2dCTwch7E/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1vqkqN2RJtX3ZghGZryPKWQshf8XjuGpJVQ2dCTwch7E/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "10ef77d1-81a1-449b-a984-90fb360c596d",
+      "name": "Get row(s) in sheet",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ny3bRXnIbrGt58KC",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are an AI Health Habit Coach.\n\nAnalyze the user's habit tracking data.\n\nBased on the records:\n\n1. Summarize their habits.\n2. Identify positive habits.\n3. Identify habits needing improvement.\n4. Give three practical recommendations.\n5. Suggest one goal for next week.\n6. Write an encouraging message.\n\nDo not provide medical advice or diagnosis.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "9f751796-0a37-4fa6-943d-d1fc81d34ee7",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        288,
+        208
+      ],
+      "id": "fe82f283-3415-48f5-95eb-f5b077649d4f",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "cPgx9hUuBpFgaWDC",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Xh8cpBvboRvZZWxiMAW8mVtG7YiZoyW4_NQHOP662wA",
+          "mode": "list",
+          "cachedResultName": "Weekly Health Reports",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Xh8cpBvboRvZZWxiMAW8mVtG7YiZoyW4_NQHOP662wA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Xh8cpBvboRvZZWxiMAW8mVtG7YiZoyW4_NQHOP662wA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Weekly Summary": "={{ $json.output }}",
+            "Report Date": "={{ $now }}",
+            "Positive Habits": "={{ $json.output }}",
+            "Improvements": "={{ $json.output }}",
+            "Recommendations": "={{ $json.output }}",
+            "Next week Goal": "={{ $json.output }}",
+            "Motivation": "={{ $json.output }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Report Date",
+              "displayName": "Report Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Weekly Summary",
+              "displayName": "Weekly Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Positive Habits",
+              "displayName": "Positive Habits",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Improvements",
+              "displayName": "Improvements",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Recommendations",
+              "displayName": "Recommendations",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Next week Goal",
+              "displayName": "Next week Goal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Motivation",
+              "displayName": "Motivation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        768,
+        0
+      ],
+      "id": "63ad55a1-8cc3-471d-b8fd-84d995be8b91",
+      "name": "Append row in sheet",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ny3bRXnIbrGt58KC",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "Analyzes weekly habits and generates AI-powered health insights."
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        976,
+        0
+      ],
+      "id": "82b3f5a1-5141-4a90-aeb2-61cafe8fb503",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "da00e59f-d798-44ec-a417-538c8006cdce",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b3fcedd60f39426ad4dbbc675726598a1b2e5c172bd5057a7b67825391e54959"
+  },
+  "nodeGroups": [],
+  "id": "WMOVoDCXDNWsGW9A",
+  "tags": []
+}

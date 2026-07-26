@@ -1,0 +1,357 @@
+{
+  "name": "01 - Health Habit Coach",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "🏃 Health Habit Coach",
+        "formDescription": "Complete this form to receive personalized healthy lifestyle recommendations.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Full Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Age",
+              "fieldType": "number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Work Schedule",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Morning Shift"
+                  },
+                  {
+                    "option": "Afternoon Shift"
+                  },
+                  {
+                    "option": "Evening Shift"
+                  },
+                  {
+                    "option": "Night Shift"
+                  },
+                  {
+                    "option": "Work from home"
+                  },
+                  {
+                    "option": "Student"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Average Sleep Hours",
+              "fieldType": "number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Exercise Frequency",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Never"
+                  },
+                  {
+                    "option": "Twice a Week"
+                  },
+                  {
+                    "option": "3-4 Times a week"
+                  },
+                  {
+                    "option": "5-6 Times a week"
+                  },
+                  {
+                    "option": "Daily"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Water Intake(Litres per day)",
+              "fieldType": "number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Health Goal",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Weight loss"
+                  },
+                  {
+                    "option": "Stay Active"
+                  },
+                  {
+                    "option": "Improve Sleep"
+                  },
+                  {
+                    "option": "Build Muscle"
+                  },
+                  {
+                    "option": "Reduce Stress"
+                  },
+                  {
+                    "option": "General wellness"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Additional Notes",
+              "fieldType": "textarea"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "29475500-52a3-43c0-a3be-4ebc3e8d1f19",
+      "name": "On form submission",
+      "webhookId": "c1e1ec6b-5676-40e5-8e12-b06a41531fe1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an AI Health Habit Coach.\n\nThe user has submitted the following information:\n\nName: {{ $json[\"Full Name\"] }}\nAge: {{ $json[\"Age\"] }}\nWork Schedule: {{ $json[\"Work Schedule\"] }}\nAverage Sleep Hours: {{ $json[\"Average Sleep Hours\"] }}\nExercise Frequency: {{ $json[\"Exercise Frequency\"] }}\nWater Intake: {{ $json[\"Water Intake (Liters per day)\"] }}\nHealth Goal: {{ $json[\"Health Goal\"] }}\nAdditional Notes: {{ $json[\"Additional Notes\"] }}\n\nYour task is to provide only general wellness advice.\n\nDo NOT diagnose diseases.\nDo NOT recommend medicines.\nDo NOT suggest treatments.\nIf the user mentions symptoms or illness, advise them to consult a qualified healthcare professional.\n\nCreate a response with the following sections:\n\n1. Health Summary\n2. Positive Habits\n3. Habits to Improve\n4. Personalized Daily Routine\n5. Water Intake Suggestions\n6. Sleep Improvement Tips\n7. Exercise Recommendations\n8. Healthy Eating Tips\n9. One Motivational Message\n\nKeep the advice practical, positive, and easy to follow.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "f792bea6-5257-4213-ae74-e55cc5001b12",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "bb8d87b7-ffa2-40a5-99b6-e16c24883d78",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "cPgx9hUuBpFgaWDC",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1naKZOs_QfqAiNan5IZWKKrKNvJjA2qPGsKjqI__9KwE",
+          "mode": "list",
+          "cachedResultName": "Health Habit Coach Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1naKZOs_QfqAiNan5IZWKKrKNvJjA2qPGsKjqI__9KwE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1naKZOs_QfqAiNan5IZWKKrKNvJjA2qPGsKjqI__9KwE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Full Name": "={{ $('On form submission').item.json['Full Name'] }}",
+            "Age": "={{ $('On form submission').item.json.Age }}",
+            "Work Schedule": "={{ $('On form submission').item.json['Work Schedule'] }}",
+            "Sleep Hours": "={{ $('On form submission').item.json['Average Sleep Hours'] }}",
+            "Exercise": "={{ $('On form submission').item.json['Exercise Frequency'] }}",
+            "Water Intake": "={{ $('On form submission').item.json['Water Intake(Litres per day)'] }}",
+            "Health Goal": "={{ $('On form submission').item.json['Health Goal'] }}",
+            "Notes": "={{ $('On form submission').item.json['Additional Notes'] }}",
+            "AI Recommendation": "={{ $json.output }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Age",
+              "displayName": "Age",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Work Schedule",
+              "displayName": "Work Schedule",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sleep Hours",
+              "displayName": "Sleep Hours",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Exercise",
+              "displayName": "Exercise",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Water Intake",
+              "displayName": "Water Intake",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Health Goal",
+              "displayName": "Health Goal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI Recommendation",
+              "displayName": "AI Recommendation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        560,
+        0
+      ],
+      "id": "01fd7b79-f462-4888-b089-be2b839555fe",
+      "name": "Append row in sheet",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ny3bRXnIbrGt58KC",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "Collects user information and generates personalized wellness recommendations using Gemini AI."
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        768,
+        0
+      ],
+      "id": "615e4c6f-ff99-4079-8ace-b08d12f74e33",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "c129fa7f-089c-46cb-9224-74941ae25979",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b3fcedd60f39426ad4dbbc675726598a1b2e5c172bd5057a7b67825391e54959"
+  },
+  "nodeGroups": [],
+  "id": "j10xYLUvfcj4OpyD",
+  "tags": []
+}

@@ -1,0 +1,112 @@
+{
+  "name": "02 - Daily Health Reminder",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "5bebd57d-08c0-4284-9816-ad9a6b890f70",
+      "name": "Schedule Trigger",
+      "retryOnFail": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are a friendly Health Habit Coach.\n\nGenerate one daily motivational health message.\n\nRequirements:\n- Maximum 80 words.\n- Include one hydration reminder.\n- Include one simple exercise suggestion.\n- Include one positive affirmation.\n- Do not give medical advice.\n- Keep the tone encouraging and friendly.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "932c635c-f367-441f-87f9-5e65067beccb",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "51b0c55b-b8c1-42ac-8b44-6e1dafd0547a",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "cPgx9hUuBpFgaWDC",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Runs every morning at 8 AM and sends motivational health messages."
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        560,
+        0
+      ],
+      "id": "390f731d-b567-4c27-9dd7-6a264cae007e",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "211eb46c-0fa5-4b30-a507-6a9dfa84f7f6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b3fcedd60f39426ad4dbbc675726598a1b2e5c172bd5057a7b67825391e54959"
+  },
+  "nodeGroups": [],
+  "id": "i8QN0oGHAlQiuxNX",
+  "tags": []
+}

@@ -1,0 +1,240 @@
+{
+  "name": "03 - Daily Habit Tracker",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Daily Habit Tracker",
+        "formDescription": "Track your daily health habits",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Full Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Date",
+              "fieldType": "date",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Water Intake(Litres)",
+              "fieldType": "number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Sleep Hours",
+              "fieldType": "number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Exercise completed?",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Yes"
+                  },
+                  {
+                    "option": "No"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Mood Today",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Excellent"
+                  },
+                  {
+                    "option": "Good"
+                  },
+                  {
+                    "option": "Average"
+                  },
+                  {
+                    "option": "Bad"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Notes",
+              "fieldType": "textarea"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "39770a45-72f1-4a9e-8106-84a7e0913036",
+      "name": "On form submission",
+      "webhookId": "9f6e4349-fa50-4f45-89e2-af7480682d1c"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1vqkqN2RJtX3ZghGZryPKWQshf8XjuGpJVQ2dCTwch7E",
+          "mode": "list",
+          "cachedResultName": "Daily Habit Tacker Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1vqkqN2RJtX3ZghGZryPKWQshf8XjuGpJVQ2dCTwch7E/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1vqkqN2RJtX3ZghGZryPKWQshf8XjuGpJVQ2dCTwch7E/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Full Name": "={{ $json['Full Name'] }}",
+            "Date": "={{ $json.Date }}",
+            "Water Intake": "={{ $json['Water Intake(Litres)'] }}",
+            "Sleep Hours": "={{ $json['Sleep Hours'] }}",
+            "Exercise": "={{ $json['Exercise completed?'] }}",
+            "Mood": "={{ $json['Mood Today'] }}",
+            "Notes": "={{ $json.Notes }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Water Intake",
+              "displayName": "Water Intake",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sleep Hours",
+              "displayName": "Sleep Hours",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Exercise",
+              "displayName": "Exercise",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mood",
+              "displayName": "Mood",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e076a40f-cbc4-47ec-b969-cee05ac81af1",
+      "name": "Append row in sheet",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ny3bRXnIbrGt58KC",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "Collects users' daily habits and stores them in Google Sheets."
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "82f500a8-5dea-498c-a481-859ef60a8dfe",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "ff83dbab-80e6-4fc6-9427-0f215c2c2c1a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b3fcedd60f39426ad4dbbc675726598a1b2e5c172bd5057a7b67825391e54959"
+  },
+  "nodeGroups": [],
+  "id": "Px4xa9rXJdi7wSyS",
+  "tags": []
+}
